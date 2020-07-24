@@ -71,7 +71,8 @@ original = load_image("./giant_panda.jpg")
 
 # Evaluation original image
 model.eval()
-correct_evaluation = int(model(original).argmax())
+original_evaluation = model(original)
+correct_evaluation = int(original_evaluation.argmax())
 print('[*]the googlenet has predicted: {}'.format(labels[correct_evaluation]))
 
 
@@ -81,9 +82,8 @@ print('[*]the googlenet has predicted: {}'.format(labels[correct_evaluation]))
 magnitude_of_smallest_bit = 0.007 
 
 # creation of the Misclassification Vector
-outputs = model(original)
 loss = torch.nn.CrossEntropyLoss()
-cost = loss(outputs, torch.tensor([correct_evaluation]).to(device))
+cost = loss(original_evaluation, torch.tensor([correct_evaluation]).to(device))
 cost.backward()
 model.zero_grad()
 noise =   original.grad.sign()
